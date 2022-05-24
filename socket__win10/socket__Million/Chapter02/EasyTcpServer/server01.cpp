@@ -17,11 +17,12 @@ void ErrorHandling(char* message) {
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	// 程序运行时需要输入端口号
+	/* 在程序中直接写死端口
 	if (argc != 2) { 
 		printf("Usage : %s <port>\n", argv[0]);
 		exit(1);
 	}
+	*/
 	
 	// 初始化相关库与 Linux 的区别之一
 	WORD ver = MAKEWORD(2, 2); // 版本号
@@ -37,8 +38,8 @@ int main(int argc, char *argv[]) {
 	
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;
-	servAddr.sin_port = htons(atoi(argv[1])); // 程序运行时输入的端口号
-	servAddr.sin_addr.s_addr = htonl(INADDR_ANY); // 本地网络127.0.0.1
+	servAddr.sin_port = htons(1289); // 程序运行时输入的端口号
+	servAddr.sin_addr.s_addr = htonl(INADDR_ANY); 
 	
 	hServSock = socket(PF_INET, SOCK_STREAM, 0);
 	if (hServSock == INVALID_SOCKET)
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]) {
 		if (hClntSock == INVALID_SOCKET)
 			ErrorHandling("accept() error!");
 		send(hClntSock, message, sizeof(message), 0);
-		printf("Success Send To N0.%d Client!\n", i++);
+		printf("Success To Send To N0.%d Client! Its IP is %s \n", i++, inet_ntoa(clntAddr.sin_addr));
 	}
 	
 	closesocket(hClntSock);
