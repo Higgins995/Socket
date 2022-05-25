@@ -23,13 +23,13 @@ int main(int argc, char *argv[]) {
 	WORD ver = MAKEWORD(2, 2); // 版本号
 	WSADATA dat;
 	if (WSAStartup(ver, &dat) != 0) 
-		ErrorHandling("WSAStartup() error!");
+		ErrorHandling("WSAStartup() Error!");
 	
 	/* -------网络编程的一系列操作--------- */
 	SOCKET hServSock;
 	SOCKADDR_IN servAddr;
 	int strLen;
-	char message[30];
+	char recvBuff[50];
 	
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;
@@ -38,26 +38,35 @@ int main(int argc, char *argv[]) {
 	
 	hServSock = socket(PF_INET, SOCK_STREAM, 0);
 	if (hServSock == INVALID_SOCKET)
-		ErrorHandling("socket() error!");
+		ErrorHandling("Socket() Error!");
 	if (connect(hServSock, (SOCKADDR *)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
-		ErrorHandling("connect() error!");
+		ErrorHandling("Connect() Error!");
+	else {
+		printf("Connected to Server!\n");
+	}
 	/* -----只剩下send()/recv()和closesocket()----- */
 	
-	// 读取用户的请求命令
 	
-	
-	// 处理请求
-	
-	
-	// 向服务器发送请求
-	send(hServSock, xxx, sizeof(xxxx) - 1, 0);
-	
-	// 接受服务器的返回
-	strLen = recv(hServSock, message, sizeof(message) - 1, 0);
-	if (strLen == -1)
-		ErrorHandling("recv() error!");
-	// printf("Message From Server: %s \n", message);
-	
+	while (true) {
+		char sendBuff[30];
+		printf("Please Input Request: ");
+		// 读取用户的请求命令
+		scanf("%s", sendBuff); 
+		// 处理请求
+		if (strcmp(sendBuff, "exit") == 0 || strcmp(sendBuff, "Exit") == 0) {
+			break;
+		} else {
+			// 向服务器发送请求
+			send(hServSock, sendBuff, sizeof(sendBuff) + 1, 0);
+		}
+		
+		// 接受服务器的返回
+		strLen = recv(hServSock, recvBuff, sizeof(recvBuff) - 1, 0);
+		if (strLen == -1)
+			ErrorHandling("Recv() Error!");
+		printf("Result is: %s\n", recvBuff);
+	}
+
 	closesocket(hServSock);
 	WSACleanup();
 	return 0;

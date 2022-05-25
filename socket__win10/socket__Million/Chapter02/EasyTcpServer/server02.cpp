@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 	SOCKADDR_IN servAddr, clntAddr;
 	int szClntAddr = sizeof(clntAddr);
 	int strLen;
-	char recvBuff[50], sendBuff[] = "Hello World!";
+	char recvBuff[50], sendBuff[] = "Hello I'm Higgins";
 	
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;
@@ -39,27 +39,39 @@ int main(int argc, char *argv[]) {
 	
 	hServSock = socket(PF_INET, SOCK_STREAM, 0);
 	if (hServSock == INVALID_SOCKET)
-		ErrorHandling("socket() error!");
+		ErrorHandling("Socket() Error!");
 	if (bind(hServSock, (SOCKADDR *)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
-		ErrorHandling("bind() error!");
+		ErrorHandling("Bind() Error!");
+	printf("Waiting for Connecting...\n");
 	if (listen(hServSock, 5) == SOCKET_ERROR)
-		ErrorHandling("listen() error!");
+		ErrorHandling("Listen() Error!");
 	hClntSock = accept(hServSock, (SOCKADDR*) &clntAddr, &szClntAddr);
 	if (hClntSock == INVALID_SOCKET)
-		ErrorHandling("accept() error!");
+		ErrorHandling("Accept() Error!");
+	else {
+		printf("Connected from %s\n", inet_ntoa(clntAddr.sin_addr));
+	}
 	
 	/* -----只剩下send()/recv()和closesocket()----- */
-	int i = 0;
 	while (true) {
 		// 接受客户端的请求
-		strstrLen = recv(hServSock, recvBuff, sizeof(recvBuff) - 1, 0);
-		if (strLen == -1)
-			ErrorHandling("recv() error!");
-		// 分析客户端的请求
+		printf("Wating for Client Request ....");
+		strLen = recv(hClntSock, recvBuff, sizeof(recvBuff), 0);
+		if (strLen > 0)
+			printf("Request is: %s\n", recvBuff);
+		else {
+			printf("Connection Closed!\n");
+			break;
+		}
 		
-		// 返回客户端请求的结果
-		// send(hClntSock, message, sizeof(message), 0);
-		printf("Success To Send To N0.%d Client! Its IP is %s \n", i++, inet_ntoa(clntAddr.sin_addr));
+		// 处理客户端的请求
+		if (strcmp(recvBuff, "getName") == 0) {
+			send(hClntSock, sendBuff, sizeof(sendBuff) + 1, 0);
+		} else if (strcmp(recvBuff, "getHost") == 0) {
+			send(hClntSock, "https://www.Higgins.top", 24, 0);
+		} else {
+			send(hClntSock, "Request Error!", 16, 0);
+		}
 	}
 	
 	closesocket(hClntSock);
