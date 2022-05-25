@@ -48,9 +48,8 @@ int main(int argc, char *argv[]) {
 	hClntSock = accept(hServSock, (SOCKADDR*) &clntAddr, &szClntAddr);
 	if (hClntSock == INVALID_SOCKET)
 		ErrorHandling("Accept() Error!");
-	else {
+	else 
 		printf("Connected from %s\n", inet_ntoa(clntAddr.sin_addr));
-	}
 	
 	/* -----只剩下send()/recv()和closesocket()----- */
 	while (true) {
@@ -60,7 +59,7 @@ int main(int argc, char *argv[]) {
 		if (strLen > 0)
 			printf("Request is: %s\n", recvBuff);
 		else {
-			printf("Connection Closed!\n");
+			printf("\n\nConnection Closed!\n");
 			break;
 		}
 		

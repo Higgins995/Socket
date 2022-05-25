@@ -41,9 +41,8 @@ int main(int argc, char *argv[]) {
 		ErrorHandling("Socket() Error!");
 	if (connect(hServSock, (SOCKADDR *)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
 		ErrorHandling("Connect() Error!");
-	else {
+	else
 		printf("Connected to Server!\n");
-	}
 	/* -----只剩下send()/recv()和closesocket()----- */
 	
 	
@@ -53,12 +52,11 @@ int main(int argc, char *argv[]) {
 		// 读取用户的请求命令
 		scanf("%s", sendBuff); 
 		// 处理请求
-		if (strcmp(sendBuff, "exit") == 0 || strcmp(sendBuff, "Exit") == 0) {
+		if (strcmp(sendBuff, "exit") == 0 || strcmp(sendBuff, "Exit") == 0)
 			break;
-		} else {
+		else
 			// 向服务器发送请求
 			send(hServSock, sendBuff, sizeof(sendBuff) + 1, 0);
-		}
 		
 		// 接受服务器的返回
 		strLen = recv(hServSock, recvBuff, sizeof(recvBuff) - 1, 0);
