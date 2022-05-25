@@ -1,11 +1,7 @@
 #define WIN32_LEAN_AND_MEAN // 将winsock2中更新的宏定义忽略
-#include <iostream>
+#include <cstdio>
 #include <windows.h>
 #include <winsock2.h>
-
-#if 0
-#pragma comment(lib, "ws2_32.lib") // 静态链接ws2_32库文件
-#endif
 
 // 报错处理函数
 void ErrorHandling(char* message) { 
@@ -14,7 +10,6 @@ void ErrorHandling(char* message) {
 	exit(1);
 }
 
-using namespace std;
 
 int main(int argc, char *argv[]) {
 	// 程序运行时需要输入地址和端口号
@@ -45,7 +40,7 @@ int main(int argc, char *argv[]) {
 		ErrorHandling("socket() error!");
 	if (connect(hServSock, (SOCKADDR *)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
 		ErrorHandling("connect() error!");
-	/* -----只剩下recv()和closesocket()----- */
+	/* -----只剩下send()/recv()和closesocket()----- */
 	
 	strLen = recv(hServSock, message, sizeof(message) - 1, 0);
 	if (strLen == -1)

@@ -43,11 +43,20 @@ int main(int argc, char *argv[]) {
 		ErrorHandling("connect() error!");
 	/* -----只剩下send()/recv()和closesocket()----- */
 	
+	// 读取用户的请求命令
+	
+	
+	// 处理请求
+	
+	
+	// 向服务器发送请求
+	send(hServSock, xxx, sizeof(xxxx) - 1, 0);
+	
+	// 接受服务器的返回
 	strLen = recv(hServSock, message, sizeof(message) - 1, 0);
 	if (strLen == -1)
 		ErrorHandling("recv() error!");
-	
-	printf("Message From Server: %s \n", message);
+	// printf("Message From Server: %s \n", message);
 	
 	closesocket(hServSock);
 	WSACleanup();
